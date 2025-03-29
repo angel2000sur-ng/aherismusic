@@ -47,10 +47,6 @@
     }
     button:hover {
       background-color: #555;
-    }
-    .hidden {
-  display: none;
-}
   </style>
 </head>
 <body>
@@ -65,7 +61,7 @@
     <div class="controls">
       <button onclick="playNextTrack()">⏭️ Suivant</button>
       <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
-      <button onclick="toggleTrackList()">🎵 Afficher/Masquer les morceaux</button>
+    <button onclick="toggleElement('trackSection')">🎵 Afficher/Masquer les morceaux</button>
     </div>
     <div class="track-list">
       <h2>Liste des morceaux</h2>
@@ -79,7 +75,7 @@
 
     <div class="sidebar">
       <h2>Playlists sauvegardées</h2>
-      <button onclick="togglePlaylists()">📂 Afficher/Masquer les playlists</button>
+    <button onclick="toggleElement('playlistSection')">📂 Afficher/Masquer les playlists</button>
       <ul id="savedPlaylists"></ul>
       <button onclick="createPlaylist()">Créer une playlist</button>
     </div>
@@ -336,19 +332,14 @@
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
-function toggleTrackList() {
-  const trackList = document.querySelector(".track-list");
-  if (trackList) {
-    trackList.classList.toggle("hidden");
-  }
-}
-
-function togglePlaylists() {
-  const sidebar = document.querySelector(".sidebar");
-  if (sidebar) {
-    sidebar.classList.toggle("hidden");
-  }
-}
+    function toggleElement(id) {
+      const element = document.getElementById(id);
+      if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+      } else {
+        element.classList.add("hidden");
+      }
+    }
       loadTrackList();
       loadPlaylists();
     };
