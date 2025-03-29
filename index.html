@@ -333,15 +333,15 @@
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
-function showTrackList() {
-  document.getElementById("pageAccueil").classList.add("hidden");
-  document.getElementById("pageMorceaux").classList.remove("hidden");
+function toggleTrackList() {
+  const trackList = document.querySelector(".track-list");
+  if (trackList.classList.contains("hidden")) {
+    trackList.classList.remove("hidden");
+  } else {
+    trackList.classList.add("hidden");
+  }
 }
 
-function showHome() {
-  document.getElementById("pageMorceaux").classList.add("hidden");
-  document.getElementById("pageAccueil").classList.remove("hidden");
-}
       loadTrackList();
       loadPlaylists();
     };
