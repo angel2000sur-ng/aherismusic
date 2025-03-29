@@ -48,6 +48,9 @@
     button:hover {
       background-color: #555;
     }
+    .hidden {
+  display: none;
+}
   </style>
 </head>
 <body>
@@ -333,13 +336,18 @@
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
-      function toggleTrackList() {
+function toggleTrackList() {
   const trackList = document.querySelector(".track-list");
-  trackList.classList.toggle("hidden");
+  if (trackList) {
+    trackList.classList.toggle("hidden");
+  }
 }
-      function togglePlaylists() {
+
+function togglePlaylists() {
   const sidebar = document.querySelector(".sidebar");
-  sidebar.classList.toggle("hidden");
+  if (sidebar) {
+    sidebar.classList.toggle("hidden");
+  }
 }
       loadTrackList();
       loadPlaylists();
