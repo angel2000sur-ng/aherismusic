@@ -62,6 +62,7 @@
     <div class="controls">
       <button onclick="playNextTrack()">⏭️ Suivant</button>
       <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
+      <button onclick="toggleTrackList()">🎵 Afficher/Masquer les morceaux</button>
     </div>
     <div class="track-list">
       <h2>Liste des morceaux</h2>
@@ -75,6 +76,7 @@
 
     <div class="sidebar">
       <h2>Playlists sauvegardées</h2>
+      <button onclick="togglePlaylists()">📂 Afficher/Masquer les playlists</button>
       <ul id="savedPlaylists"></ul>
       <button onclick="createPlaylist()">Créer une playlist</button>
     </div>
@@ -331,6 +333,14 @@
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
+      function toggleTrackList() {
+  const trackList = document.querySelector(".track-list");
+  trackList.classList.toggle("hidden");
+}
+      function togglePlaylists() {
+  const sidebar = document.querySelector(".sidebar");
+  sidebar.classList.toggle("hidden");
+}
       loadTrackList();
       loadPlaylists();
     };
