@@ -1,0 +1,121 @@
+/* Global reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Circular', sans-serif;
+    background-color: #121212;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120vh;
+    text-align: center;
+    flex-direction: column;
+    background-image: linear-gradient(to bottom, #121212, #181818);
+}
+
+.container {
+    background-color: #181818;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 1500px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    color: #1DB954;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+    color: #b3b3b3;
+}
+
+audio {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.track-list {
+    margin-top: 15px;
+    list-style-type: none;
+}
+
+ul li {
+    font-size: 1.2em;
+    margin: 10px 0;
+    padding: 12px;
+    background-color: #282828;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+ul li:hover {
+    background-color: #1DB954;
+    color: white;
+    transform: translateX(5px);
+}
+
+ul li i {
+    font-size: 1.5em;
+    color: #b3b3b3;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+ul li i:hover {
+    color: #1DB954;
+}
+
+ul li span {
+    flex-grow: 1;
+    text-align: left;
+    color: #fff;
+}
+
+.favorite {
+    color: #b3b3b3;
+}
+
+.favorite.active {
+    color: #1DB954;
+}
