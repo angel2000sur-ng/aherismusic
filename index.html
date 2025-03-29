@@ -61,7 +61,8 @@
     <div class="controls">
       <button onclick="playNextTrack()">⏭️ Suivant</button>
       <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
-    <button onclick="toggleElement('trackSection')">🎵 Afficher/Masquer les morceaux</button>
+      
+    <button onclick="showTrackList()">🎵 Voir la liste des morceaux</button>
     </div>
     <div class="track-list">
       <h2>Liste des morceaux</h2>
@@ -332,14 +333,15 @@
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
-    function toggleElement(id) {
-      const element = document.getElementById(id);
-      if (element.classList.contains("hidden")) {
-        element.classList.remove("hidden");
-      } else {
-        element.classList.add("hidden");
-      }
-    }
+function showTrackList() {
+  document.getElementById("pageAccueil").classList.add("hidden");
+  document.getElementById("pageMorceaux").classList.remove("hidden");
+}
+
+function showHome() {
+  document.getElementById("pageMorceaux").classList.add("hidden");
+  document.getElementById("pageAccueil").classList.remove("hidden");
+}
       loadTrackList();
       loadPlaylists();
     };
