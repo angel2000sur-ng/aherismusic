@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catfy</title>
+  <link rel="icon" type="image/png" href="music/logo.png">
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -14,7 +15,8 @@
       color: #fff; 
     }
     .container {
-      max-width: 1500px;
+      max-width: 1200px;
+      margin: 0 auto;
       margin: auto;
       background-color: #333; 
       padding: 15px;
@@ -61,7 +63,6 @@
       <button onclick="playNextTrack()">⏭️ Suivant</button>
       <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
     </div>
-
     <div class="track-list">
       <h2>Liste des morceaux</h2>
       <ul id="trackList"></ul>
@@ -89,7 +90,9 @@
     const tracks = [
       { title: "Lya Funk", src: "music/track1.mp3", image: "music/image1.jpg" },
       { title: "Let's Gambling", src: "music/track2.mp3", image: "music/image2.jpg" },
-      { title: "BLUE HORIZON FUNK", src: "music/track3.mp3", image: "music/image3.jpg" }
+      { title: "BLUE HORIZON FUNK", src: "music/track3.mp3", image: "music/image3.jpg" },
+      { title: "Skyfall", src: "music/track4.mp3", image: "music/image4.jpg" },
+      { title: "NEXT!", src: "music/track5.mp3", image: "music/image5.jpg" },
     ];
 
     let currentTrackIndex = 0;
@@ -320,6 +323,7 @@
         playPlaylistSequence(shuffled, 0);
       }
     }
+    
 
     window.onload = () => {
       let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
