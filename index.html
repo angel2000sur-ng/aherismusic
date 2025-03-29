@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catfy</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #000; 
+      color: #fff; 
+    }
+    .container {
+      max-width: 1500px;
+      margin: auto;
+      background-color: #333; 
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .track-list ul,
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar button {
+      margin-left: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      background-color: #444;
+      border: none;
+      padding: 5px 10px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Cat Fy</h1>
+
+    <audio id="audioPlayer" controls>
+      <source id="audioSource" src="" type="audio/mp3">
+      Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
+    <div class="controls">
+      <button onclick="playNextTrack()">⏭️ Suivant</button>
+      <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
+    </div>
+
+    <div class="track-list">
+      <h2>Liste des morceaux</h2>
+      <ul id="trackList"></ul>
+    </div>
+
+    <div class="now-playing">
+      <h2>En cours</h2>
+      <img id="currentTrackImage" src="placeholder.jpg" alt="Image du morceau">
+    </div>
+
+    <div class="sidebar">
+      <h2>Playlists sauvegardées</h2>
+      <ul id="savedPlaylists"></ul>
+      <button onclick="createPlaylist()">Créer une playlist</button>
+    </div>
+
+    <div id="playlistMenu" class="hidden">
+      <h3>Ajouter à une playlist</h3>
+      <ul id="playlistOptions"></ul>
+      <button onclick="closePlaylistMenu()">Annuler</button>
+    </div>
+  </div>
+
+  <script>
+    const tracks = [
+      { title: "Lya Funk", src: "music/track1.mp3", image: "music/image1.jpg" },
+      { title: "Let's Gambling", src: "music/track2.mp3", image: "music/image2.jpg" },
+      { title: "BLUE HORIZON FUNK", src: "music/track3.mp3", image: "music/image3.jpg" }
+    ];
+
+    let currentTrackIndex = 0;
+    const audioPlayer = document.getElementById("audioPlayer");
+    const audioSource = document.getElementById("audioSource");
+    const trackListElement = document.getElementById("trackList");
+    const currentTrackImage = document.getElementById("currentTrackImage");
+    const playlistMenu = document.getElementById("playlistMenu");
+    const playlistOptions = document.getElementById("playlistOptions");
+
+    function loadTrackList() {
+      trackListElement.innerHTML = "";
+      tracks.forEach((track, index) => {
+        const li = document.createElement("li");
+        const isFavorite = getFavorites().includes(index);
+        li.innerHTML = ` 
+          <span onclick="playTrack(${index})">${track.title}</span>
+          <button onclick="toggleFavorite(${index})">${isFavorite ? '⭐' : '☆'}</button>
+          <button onclick="openPlaylistMenu(${index})">➕</button>
+        `;
+        trackListElement.appendChild(li);
+      });
+    }
+
+    function playTrack(index) {
+      currentTrackIndex = index;
+      audioSource.src = tracks[index].src;
+      currentTrackImage.src = tracks[index].image;
+      audioPlayer.load();
+      audioPlayer.play();
+    }
+
+    function playNextTrack() {
+      currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+      playTrack(currentTrackIndex);
+    }
+
+    function playPlaylist() {
+      playTrack(0);
+      audioPlayer.onended = () => {
+        playNextTrack();
+      };
+    }
+
+    function getFavorites() {
+      return JSON.parse(localStorage.getItem("favorites")) || [];
+    }
+
+    function toggleFavorite(index) {
+      let favorites = getFavorites();
+      if (favorites.includes(index)) {
+        favorites = favorites.filter(i => i !== index);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        removeFromPlaylist("Favoris", index);
+      } else {
+        favorites.push(index);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        saveToPlaylist("Favoris", index);
+      }
+      loadTrackList();
+    }
+
+    function removeFromPlaylist(playlistName, trackIndex) {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      let playlist = playlists.find(p => p.name === playlistName);
+      if (playlist && playlist.tracks.includes(trackIndex)) {
+        playlist.tracks = playlist.tracks.filter(i => i !== trackIndex);
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+        loadPlaylists();
+      }
+    }
+
+    function createPlaylist() {
+      const name = prompt("Nom de la playlist :");
+      if (name) {
+        let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+        playlists.push({ name, tracks: [] });
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+        loadPlaylists();
+      }
+    }
+
+    function loadPlaylists() {
+      const savedPlaylists = document.getElementById("savedPlaylists");
+      savedPlaylists.innerHTML = "";
+      const playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      playlists.forEach((playlist, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span onclick="togglePlaylistMenu(${index})" style="cursor:pointer; font-weight:bold;">${playlist.name}</span>
+            <div>
+              <button onclick="randomPlay(${index})">🔀</button>
+              <button onclick="renamePlaylist(${index})">⚙️</button> 
+              <button onclick="deletePlaylist(${index})">❌</button> <!-- Bouton pour supprimer la playlist -->
+              <button id="toggleBtn${index}" onclick="togglePlaylistMenu(${index})">▶️</button>
+            </div>
+          </div>
+          <ul id="playlistTracks${index}" class="hidden"></ul>
+        `;
+        savedPlaylists.appendChild(li);
+      });
+    }
+
+    function renamePlaylist(index) {
+      const playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      const playlist = playlists[index];
+      const newName = prompt("Nouveau nom de la playlist :", playlist.name);
+      if (newName) {
+        playlist.name = newName;
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+        loadPlaylists();
+      }
+    }
+
+    function deletePlaylist(index) {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      playlists.splice(index, 1);
+      localStorage.setItem("playlists", JSON.stringify(playlists));
+      loadPlaylists();  // Recharge la liste des playlists après la suppression
+    }
+
+    function togglePlaylistMenu(index) {
+      const playlistTracks = document.getElementById(`playlistTracks${index}`);
+      const toggleBtn = document.getElementById(`toggleBtn${index}`);
+      if (playlistTracks.classList.contains("hidden")) {
+        displayPlaylistTracks(index);
+        playlistTracks.classList.remove("hidden");
+        toggleBtn.textContent = "▼";
+      } else {
+        playlistTracks.classList.add("hidden");
+        toggleBtn.textContent = "▶️";
+      }
+    }
+
+    function displayPlaylistTracks(playlistIndex) {
+      const playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      const playlist = playlists[playlistIndex];
+      const playlistTracks = document.getElementById(`playlistTracks${playlistIndex}`);
+      playlistTracks.innerHTML = "";
+
+      playlist.tracks.forEach((trackIndex, trackOrderIndex) => {
+        const li = document.createElement("li");
+        li.style.display = "flex";
+        li.style.justifyContent = "space-between";
+        li.style.alignItems = "center";
+        li.style.padding = "4px 0";
+
+        const span = document.createElement("span");
+        span.textContent = tracks[trackIndex].title;
+        span.style.cursor = "pointer";
+        span.onclick = function() {
+          playPlaylistSequence(playlist.tracks, trackOrderIndex);
+        };
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "X";
+        removeBtn.onclick = function(e) {
+          e.stopPropagation();
+          removeTrackFromPlaylist(playlistIndex, trackOrderIndex);
+        };
+
+        li.appendChild(span);
+        li.appendChild(removeBtn);
+        playlistTracks.appendChild(li);
+      });
+    }
+
+    function playPlaylistSequence(trackArray, currentPlaylistIndex) {
+      if (currentPlaylistIndex < trackArray.length) {
+        const trackIndex = trackArray[currentPlaylistIndex];
+        playTrack(trackIndex);
+        audioPlayer.onended = function() {
+          playPlaylistSequence(trackArray, currentPlaylistIndex + 1);
+        };
+      } else {
+        playPlaylistSequence(trackArray, 0);
+      }
+    }
+
+    function removeTrackFromPlaylist(playlistIndex, trackOrderIndex) {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      if (playlists[playlistIndex] && playlists[playlistIndex].tracks[trackOrderIndex] !== undefined) {
+        playlists[playlistIndex].tracks.splice(trackOrderIndex, 1);
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+        displayPlaylistTracks(playlistIndex);
+      }
+    }
+
+    function openPlaylistMenu(trackIndex) {
+      playlistMenu.classList.remove("hidden");
+      playlistOptions.innerHTML = "";
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      playlists.forEach((playlist, i) => {
+        const li = document.createElement("li");
+        li.textContent = playlist.name;
+        li.onclick = () => {
+          saveToPlaylist(playlist.name, trackIndex);
+          closePlaylistMenu();
+        };
+        playlistOptions.appendChild(li);
+      });
+    }
+
+    function closePlaylistMenu() {
+      playlistMenu.classList.add("hidden");
+    }
+
+    function saveToPlaylist(playlistName, trackIndex) {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      let playlist = playlists.find(p => p.name === playlistName);
+      if (playlist && !playlist.tracks.includes(trackIndex)) {
+        playlist.tracks.push(trackIndex);
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+      }
+      loadPlaylists();
+    }
+
+    function randomPlay(playlistIndex) {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      const playlist = playlists[playlistIndex];
+      if (playlist && playlist.tracks.length > 0) {
+        let shuffled = playlist.tracks.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        playPlaylistSequence(shuffled, 0);
+      }
+    }
+
+    window.onload = () => {
+      let playlists = JSON.parse(localStorage.getItem("playlists")) || [];
+      if (!playlists.some(p => p.name === "Favoris")) {
+        playlists.push({ name: "Favoris", tracks: [] });
+        localStorage.setItem("playlists", JSON.stringify(playlists));
+      }
+      loadTrackList();
+      loadPlaylists();
+    };
+  </script>
+</body>
+</html>
