@@ -70,8 +70,8 @@ body {
     <div class="controls">
       <button onclick="playNextTrack()">⏭️ Suivant</button>
       <button onclick="playPlaylist()">▶️ Lancer la playlist</button>
-      
-    <button onclick="showTrackList()">🎵 Voir la liste des morceaux</button>
+      <button onclick="toggleTrackList()">🎵 Voir / Cacher la liste des morceaux</button>
+      <div class="track-list" id="trackListSection">
     </div>
     <div class="track-list">
       <h2>Liste des morceaux</h2>
@@ -374,6 +374,10 @@ function toggleTrackList() {
   document.getElementById("nowPlayingTitle").innerText = track.name;
   document.getElementById("currentMedia").src = track.imageUrl || "placeholder.jpg";
 }
+  function toggleTrackList() {
+    const trackList = document.getElementById('trackListSection');
+    trackList.classList.toggle('hidden');
+  }
 
   </script>
 </body>
