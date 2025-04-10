@@ -6,6 +6,7 @@
   <title>Catfy</title>
   <link rel="icon" type="image/png" href="music/logo.png">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -96,6 +97,20 @@ body {
       <ul id="playlistOptions"></ul>
       <button onclick="closePlaylistMenu()">Annuler</button>
     </div>
+      <div id="g_id_onload"
+     data-client_id="906015027286-btpg2s3gmga6adlhu19culi0hgb0trle.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="pill"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
   </div>
 
   <script>
@@ -378,7 +393,28 @@ function toggleTrackList() {
     const trackList = document.getElementById('trackListSection');
     trackList.classList.toggle('hidden');
   }
+      function handleCredentialResponse(response) {
+    // Le token JWT renvoyé par Google
+    const idToken = response.credential;
 
+    // Tu peux le décoder pour afficher les infos de l'utilisateur
+    const userData = parseJwt(idToken);
+    console.log("Utilisateur connecté :", userData);
+
+    // Affiche par exemple son nom
+    alert("Bienvenue, " + userData.name + " !");
+  }
+
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join('')
+    );
+    return JSON.parse(jsonPayload);
+  }
   </script>
 </body>
 </html>
