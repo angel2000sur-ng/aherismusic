@@ -47,6 +47,15 @@
     }
     button:hover {
       background-color: #555;
+    }
+    html, body {
+  height: 135%;
+  overflow-y: auto; /* Assure qu'on peut scroller verticalement */
+}
+
+body {
+  scroll-behavior: smooth; /* Optionnel : rend le scroll fluide */
+}
   </style>
 </head>
 <body>
@@ -66,6 +75,7 @@
     </div>
     <div class="track-list">
       <h2>Liste des morceaux</h2>
+      <input type="text" id="searchInput" placeholder="Rechercher un morceau..." oninput="filterTracks()" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none;">
       <ul id="trackList"></ul>
     </div>
 
@@ -346,6 +356,25 @@ function toggleTrackList() {
       loadTrackList();
       loadPlaylists();
     };
+  function filterTracks() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const trackList = document.getElementById("trackList");
+    const tracks = trackList.getElementsByTagName("li");
+
+    for (let i = 0; i < tracks.length; i++) {
+      const trackName = tracks[i].textContent || tracks[i].innerText;
+      if (trackName.toLowerCase().includes(input)) {
+        tracks[i].style.display = "";
+      } else {
+        tracks[i].style.display = "none";
+      }
+    }
+  }
+  function updateNowPlaying(track) {
+  document.getElementById("nowPlayingTitle").innerText = track.name;
+  document.getElementById("currentMedia").src = track.imageUrl || "placeholder.jpg";
+}
+
   </script>
 </body>
 </html>
