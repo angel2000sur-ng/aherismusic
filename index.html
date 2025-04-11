@@ -50,10 +50,10 @@
       background-color: #555;
     }
     html, body {
-  height: 135%;
-  overflow-y: auto; /* Assure qu'on peut scroller verticalement */
-}
-
+  height: auto;
+  overflow-y: scroll; /* Forcer une seule scrollbar */
+  margin: 0;
+} 
 body {
   scroll-behavior: smooth; /* Optionnel : rend le scroll fluide */
 }
