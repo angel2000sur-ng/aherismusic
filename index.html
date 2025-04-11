@@ -421,6 +421,49 @@ function toggleTrackList() {
     );
     return JSON.parse(jsonPayload);
   }
+    function handleCredentialResponse(response) {
+  const idToken = response.credential;
+  const userData = parseJwt(idToken);
+  const userId = userData.sub; // ou userData.email
+  localStorage.setItem("currentUser", userId);
+
+  // Charger les données personnalisées
+  loadUserData(userId);
+
+  alert("Connecté en tant que " + userData.name);
+}
+    function saveUserPlaylists(playlists) {
+  const userId = localStorage.getItem("currentUser");
+  if (!userId) return;
+
+  localStorage.setItem(`playlists_${userId}`, JSON.stringify(playlists));
+}
+
+function getUserPlaylists() {
+  const userId = localStorage.getItem("currentUser");
+  if (!userId) return [];
+
+  const data = localStorage.getItem(`playlists_${userId}`);
+  return data ? JSON.parse(data) : [];
+}
+    // Sauvegarde d'une playlist après modification
+const playlists = [
+  { name: "Chill", tracks: ["zic1.mp3", "zic2.mp3"] }
+];
+saveUserPlaylists(playlists);
+
+// Chargement automatique après connexion
+function loadUserData(userId) {
+  const playlists = getUserPlaylists();
+  console.log("Playlists de cet utilisateur :", playlists);
+  // tu peux les afficher ici
+}
+    function logout() {
+  localStorage.removeItem("currentUser");
+  // tu peux aussi vider l'interface ou recharger la page
+  location.reload();
+}
+    
   </script>
 </body>
 </html>
