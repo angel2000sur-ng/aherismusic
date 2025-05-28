@@ -410,6 +410,10 @@ function toggleTrackList() {
     const trackList = document.getElementById('trackListSection');
     trackList.classList.toggle('hidden');
   }
+    if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
       function handleCredentialResponse(response) {
     // Le token JWT renvoyé par Google
     const idToken = response.credential;
@@ -432,6 +436,7 @@ function toggleTrackList() {
     );
     return JSON.parse(jsonPayload);
   }
+
 
   </script>
 </body>
