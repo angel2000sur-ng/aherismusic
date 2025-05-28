@@ -80,18 +80,7 @@ body {
       <button onclick="toggleTrackList()">🎵 Voir / Cacher la liste des morceaux</button>
       <div class="track-list" id="trackListSection">
     </div>
-    <div class="track-list">
-      <h2>Liste des morceaux</h2>
-      <input type="text" id="searchInput" placeholder="Rechercher un morceau..." oninput="filterTracks()" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none;">
-      <ul id="trackList"></ul>
-    </div>
-
-    <div class="now-playing">
-      <h2>En cours</h2>
-      <img id="currentTrackImage" src="placeholder.jpg" alt="Image du morceau">
-    </div>
-
-    <div class="sidebar">
+        <div class="sidebar">
       <h2>Playlists sauvegardées</h2>
     <button onclick="toggleElement('playlistSection')">📂 Afficher/Masquer les playlists</button>
       <ul id="savedPlaylists"></ul>
@@ -117,6 +106,17 @@ body {
      data-size="large"
      data-logo_alignment="left">
 </div>
+    <div class="track-list">
+      <h2>Liste des morceaux</h2>
+      <input type="text" id="searchInput" placeholder="Rechercher un morceau..." oninput="filterTracks()" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none;">
+      <ul id="trackList"></ul>
+    </div>
+
+    <div class="now-playing">
+      <h2>En cours</h2>
+      <img id="currentTrackImage" src="placeholder.jpg" alt="Image du morceau">
+    </div>
+
   </div>
 
   <script>
