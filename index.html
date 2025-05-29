@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -124,7 +125,7 @@ body {
       { title: "Lya Funk", src: "music/track1.mp3", image: "music/image1.jpg" },
       { title: "Let's Gambling", src: "music/track2.mp3", image: "music/2.png" },
       { title: "BLUE HORIZON FUNK", src: "music/track3.mp3", image: "music/3.png" },
-      { title: "Skyfall", src: "music/track4.mp3", image: "music/4.png" },
+      { title: "LUNA BALA (Slowed)", src: "music/LUNA BALA (Slowed).mp3", image: "music/4.png" },
       { title: "NEXT!", src: "music/track5.mp3", image: "music/5.png" },
       { title: "Ela Vira Mortal", src: "music/track6.mp3", image: "music/6.png" },
       { title: "Montagem Ladrao", src: "music/track7.mp3", image: "music/7.png" },
@@ -148,25 +149,30 @@ body {
     const playlistMenu = document.getElementById("playlistMenu");
     const playlistOptions = document.getElementById("playlistOptions");
 
-    function loadTrackList() {
-      trackListElement.innerHTML = "";
-      tracks.forEach((track, index) => {
-        const li = document.createElement("li");
-        const isFavorite = getFavorites().includes(index);
-li.innerHTML = `
-  <div style="display: flex; align-items: center; background: #222; padding: 10px; margin: 5px 0; border-radius: 10px;">
-    <img src="${track.image}" alt="${track.title}" style="width: 60px; height: 60px; border-radius: 10px; margin-right: 15px;">
-    <div style="flex: 1;">
-      <div style="font-weight: bold; cursor: pointer;" onclick="playTrack(${index})">${track.title}</div>
-    </div>
-    <button onclick="toggleFavorite(${index})">${isFavorite ? '⭐' : '☆'}</button>
-    <button onclick="openPlaylistMenu(${index})">➕</button>
-  </div>
-`;
+function loadTrackList() {
+  trackListElement.innerHTML = "";
 
-        trackListElement.appendChild(li);
-      });
-    }
+  // Copier et trier les morceaux par titre
+  const sortedTracks = [...tracks].sort((a, b) => a.title.localeCompare(b.title));
+
+  sortedTracks.forEach((track, index) => {
+    const realIndex = tracks.findIndex(t => t.title === track.title && t.src === track.src);
+    const li = document.createElement("li");
+    const isFavorite = getFavorites().includes(realIndex);
+    li.innerHTML = `
+      <div style="display: flex; align-items: center; background: #222; padding: 10px; margin: 5px 0; border-radius: 10px;">
+        <img src="${track.image}" alt="${track.title}" style="width: 60px; height: 60px; border-radius: 10px; margin-right: 15px;">
+        <div style="flex: 1;">
+          <div style="font-weight: bold; cursor: pointer;" onclick="playTrack(${realIndex})">${track.title}</div>
+        </div>
+        <button onclick="toggleFavorite(${realIndex})">${isFavorite ? '⭐' : '☆'}</button>
+        <button onclick="openPlaylistMenu(${realIndex})">➕</button>
+      </div>
+    `;
+    trackListElement.appendChild(li);
+  });
+}
+
 
     function playTrack(index) {
       currentTrackIndex = index;
