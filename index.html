@@ -185,6 +185,33 @@ function loadTrackList() {
       currentTrackImage.src = tracks[index].image;
       audioPlayer.load();
       audioPlayer.play();
+      function playTrack(index) {
+  currentTrackIndex = index;
+  audioSource.src = tracks[index].src;
+  currentTrackImage.src = tracks[index].image;
+  audioPlayer.load();
+  audioPlayer.play();
+
+  // Protéger la MediaSession contre les erreurs
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: tracks[index].title || 'Catfy',
+        artist: 'Catfy',
+        album: 'Playlist',
+        artwork: [
+          {
+            src: tracks[index].image || 'music/logo1.png',
+            sizes: '512x512',
+            type: 'image/png'
+          }
+        ]
+      });
+    } catch (e) {
+      console.warn("Erreur MediaSession : ", e);
+    }
+  }
+}
     }
 
     function playNextTrack() {
@@ -393,6 +420,20 @@ function loadTrackList() {
         playlists.push({ name: "Favoris", tracks: [] });
         localStorage.setItem("playlists", JSON.stringify(playlists));
       }
+      if ('mediaSession' in navigator && !audioPlayer.src) {
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: 'Catfy',
+      artist: '',
+      album: '',
+      artwork: [
+        { src: 'music/logo1.png', sizes: '512x512', type: 'image/png' }
+      ]
+    });
+  } catch (e) {
+    console.warn("Erreur fallback MediaSession : ", e);
+  }
+}
 function toggleTrackList() {
   const trackList = document.querySelector(".track-list");
   if (trackList.classList.contains("hidden")) {
